@@ -16,22 +16,26 @@
                 <input type="text" id="todoName" placeholder="Todo Name" required class="w-full p-2 border border-gray-300 rounded">
             </div>
             <div class="mb-4">
-                <select id="todoCategory" required class="w-full p-2 border border-gray-300 rounded">
-                  <option value="" disabled selected>Select Category</option>
-                  <option value="Work">Work</option>
-                  <option value="Home">Home</option>
-                  <option value="School">School</option>
-              </select>
+                <select id="todoCategory" class="w-full p-2 border border-gray-300 rounded">
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="Work">Work</option>
+                    <option value="Home">Home</option>
+                    <option value="School">School</option>
+                </select>
             </div>
             <div class="mb-4">
-                <input type="date" id="todoDueDate" required class="w-full p-2 border border-gray-300 rounded">
+                <input type="date" id="todoDueDate" class="w-full p-2 border border-gray-300 rounded">
             </div>
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Add Todo</button>
         </form>
 
         <h2 class="text-xl font-semibold mb-2">Todos</h2>
+        <button id="clearCompletedButton" class="bg-white border border-red-500 text-red-500 px-2 py-1 rounded">Clear Completed</button>
+        <div id="incompleteCount">Incomplete Todos: 0</div>
         <ul id="todoList" class="mb-6"></ul>
 
+        <h2 class="text-xl font-semibold mb-2">Categories</h2>
+        <ul id="categoryList" class="mb-6"></ul>
     </div>
 
     <script src="index.js"></script>
