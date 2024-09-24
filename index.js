@@ -1,26 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
-    let todos = [];
-    const categories = [];
+    let todos = [
+        {
+        id: 1,
+        name: "Take out the trash",
+        status: 'Incomplete',
+        category: 'School',
+        dueDate: '2021-09-01',
+        },
 
-    document.getElementById('addTodoForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const name = document.getElementById('todoName').value;
-        const category = document.getElementById('todoCategory').value;
-        const dueDate = document.getElementById('todoDueDate').value;
-        const newTodo = addTodo(name, category, dueDate);
-        displayTodos();
-    });
+        {
+        id: 2,
+        name: "Empty the dishwasher",
+        status: 'Complete',
+        category: 'Home',
+        dueDate: '2021-09-01',
+        },
 
-    document.getElementById('addCategoryForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const category = document.getElementById('categoryName').value;
-        addCategory(category);
-        displayCategories();
-    });
-
-    document.getElementById('clearCompletedButton').addEventListener('click', function() {
-        clearCompletedTodos();
-    });
+    ];
 
     function displayTodos() {
         const todoList = document.getElementById('todoList');
@@ -36,23 +32,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 incompleteCount++;
             }
 
-            const nameSpan = document.createElement('span');
-            nameSpan.textContent = todo.name;
-            li.appendChild(nameSpan);
+            const nameDiv = document.createElement('div');
+            nameDiv.textContent = todo.name;
+            li.appendChild(nameDiv);
 
-            const categorySpan = document.createElement('span');
-            categorySpan.textContent = ` - ${todo.category}`;
-            li.appendChild(categorySpan);
+            const categoryDiv = document.createElement('div');
+            categoryDiv.textContent = ` - ${todo.category}`;
+            li.appendChild(categoryDiv);
 
-            const dueDateSpan = document.createElement('span');
-            dueDateSpan.textContent = ` - ${todo.dueDate}`;
-            li.appendChild(dueDateSpan);
+            const dueDateDiv = document.createElement('div');
+            dueDateDiv.textContent = ` - ${todo.dueDate}`;
+            li.appendChild(dueDateDiv);
 
             const completeButton = document.createElement('button');
             completeButton.textContent = todo.status === 'Complete' ? 'Incomplete' : 'Complete';
             completeButton.className = 'bg-blue-500 text-white px-2 py-1 rounded ml-2';
             completeButton.onclick = (event) => {
-                event.stopPropagation(); // Prevent the click event from bubbling up to the li
                 todo.status = todo.status === 'Complete' ? 'Incomplete' : 'Complete';
                 displayTodos();
             };
@@ -62,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
             editButton.textContent = 'Edit';
             editButton.className = 'bg-yellow-500 text-white px-2 py-1 rounded ml-2';
             editButton.onclick = (event) => {
-                event.stopPropagation(); // Prevent the click event from bubbling up to the li
                 editTodoInline(todo, li);
             };
             li.appendChild(editButton);
@@ -71,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
             removeButton.textContent = 'Remove';
             removeButton.className = 'bg-red-500 text-white px-2 py-1 rounded ml-2';
             removeButton.onclick = (event) => {
-                event.stopPropagation(); // Prevent the click event from bubbling up to the li
                 const index = todos.indexOf(todo);
                 if (index > -1) {
                     todos.splice(index, 1);
@@ -87,27 +80,15 @@ document.addEventListener('DOMContentLoaded', function() {
         incompleteCountElement.textContent = `Incomplete Todos: ${incompleteCount}`;
     }
 
-    function displayCategories() {
-        const categoryList = document.getElementById('categoryList');
-        categoryList.innerHTML = '';
-        categories.forEach(category => {
-            const li = document.createElement('li');
-            li.textContent = category;
-            
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete';
-            deleteButton.className = 'bg-red-500 text-white px-2 py-1 rounded';
-            deleteButton.onclick = () => {
-                deleteCategory(category);
-                displayCategories();
-            };
-            li.appendChild(deleteButton);
+    document.getElementById('addTodoForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const name = document.getElementById('todoName').value;
+        const category = document.getElementById('todoCategory').value;
+        const dueDate = document.getElementById('todoDueDate').value;
+        const newTodo = addTodo(name, category, dueDate);
+        displayTodos();
+    });
 
-            categoryList.appendChild(li);
-        });
-    }
-
-    // Define the addTodo function
     function addTodo(name, category, dueDate) {
         const newTodo = {
             id: Date.now(),
@@ -120,7 +101,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return newTodo;
     }
 
-    // Define the completeTodo function
     function completeTodo(id) {
         const todo = todos.find(todo => todo.id === id);
         if (todo) {
@@ -128,7 +108,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Define the deleteCategory function
     function deleteCategory(category) {
         const index = categories.indexOf(category);
         if (index > -1) {
@@ -136,7 +115,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Define the editTodoInline function
     function editTodoInline(todo, li) {
         li.innerHTML = '';
 
@@ -159,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
         saveButton.textContent = 'Save';
         saveButton.className = 'bg-green-500 text-white px-2 py-1 rounded ml-2';
         saveButton.onclick = (event) => {
-            event.stopPropagation(); // Prevent the click event from bubbling up to the li
+            event.stopPropagation(); 
             todo.name = nameInput.value;
             todo.category = categoryInput.value;
             todo.dueDate = dueDateInput.value;
@@ -171,20 +149,23 @@ document.addEventListener('DOMContentLoaded', function() {
         cancelButton.textContent = 'Cancel';
         cancelButton.className = 'bg-gray-500 text-white px-2 py-1 rounded ml-2';
         cancelButton.onclick = (event) => {
-            event.stopPropagation(); // Prevent the click event from bubbling up to the li
+            event.stopPropagation(); 
             displayTodos();
         };
         li.appendChild(cancelButton);
     }
+    
+    document.getElementById('clearCompletedButton').addEventListener('click', function() {
+        clearCompletedTodos();
+    });
 
-    // Define the clearCompletedTodos function
     function clearCompletedTodos() {
-        console.log('Before clearing:', todos); // Debugging line
+        console.log('Before clearing:', todos); 
         todos = todos.filter(todo => todo.status !== 'Complete');
-        console.log('After clearing:', todos); // Debugging line
+        console.log('After clearing:', todos); 
         displayTodos();
     }
 
     displayTodos();
-    displayCategories();
+    console.log(todos);
 });
