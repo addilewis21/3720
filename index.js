@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         todos.forEach(todo => {
             const li = document.createElement('li');
-            li.className = `mb-4 p-4 ${categoryColors[todo.category] || 'bg-gray-200'}`; // Apply background color based on category
+            li.className = `mb-4 p-4 ${categoryColors[todo.category] || 'bg-gray-200'}`;
             if (todo.status === 'Complete') {
                 li.className += ' line-through';
             } else {
@@ -96,18 +96,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     const newOption = document.createElement('option');
                     newOption.value = newCategory;
                     newOption.textContent = newCategory;
-                    newOption.className = newColor; // Apply the chosen color
+                    newOption.className = newColor; 
                     todoCategory.insertBefore(newOption, todoCategory.lastElementChild);
                     todoCategory.value = newCategory;
 
-                    // Add the new category and color to the categoryColors object
                     categoryColors[newCategory] = newColor;
                 } else {
                     alert('No color entered. Category not added.');
-                    todoCategory.value = ''; // Reset to default if no color is entered
+                    todoCategory.value = '';
                 }
             } else {
-                todoCategory.value = ''; // Reset to default if no new category is entered
+                todoCategory.value = '';
             }
         }
     });
@@ -121,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const newTodo = addTodo(name, category, dueDate);
 
         const li = document.createElement('li');
-        li.className = `mb-4 p-4 ${categoryColors[category] || 'bg-gray-200'}`; // Apply background color based on category
+        li.className = `mb-4 p-4 ${categoryColors[category] || 'bg-gray-200'}`;
 
         const nameDiv = document.createElement('div');
         nameDiv.textContent = name;
@@ -228,6 +227,16 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('After clearing:', todos);
         displayTodos();
     }
+
+    // Add event listener for removing categories
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('remove-category')) {
+            const categoryDiv = event.target.parentElement;
+            const category = categoryDiv.getAttribute('data-value');
+            delete categoryColors[category];
+            categoryDiv.remove();
+        }
+    });
 
     displayTodos();
     console.log(todos);
