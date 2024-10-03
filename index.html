@@ -17,13 +17,15 @@
             </div>
             <div class="mb-4">
                 <select id="todoCategory" class="w-full p-2 border border-gray-300 rounded">
-                    <option value="" disabled selected>Select Category</option>
-                    <option value="Work">Work</option>
-                    <option value="Home">Home</option>
-                    <option value="School">School</option>
+                    <option  value="" disabled selected>Select Category</option>
+                    <option class="bg-green-200" value="Work">Work</option>
+                    <option class="bg-yellow-200" value="Home">Home</option>
+                    <option class="bg-blue-200" value="School">School</option>
+                    <option class="bg-pink-200" value="addNewCategory">Add New Category</option> <!-- Add this option -->
+
                 </select>
             </div>
-            <div class="mb-4">
+            <div class="mb-4 bg-customGreen">
                 <input type="date" id="todoDueDate" class="w-full p-2 border border-gray-300 rounded">
             </div>
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Add Todo</button>

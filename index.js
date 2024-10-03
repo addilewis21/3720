@@ -1,22 +1,27 @@
 document.addEventListener('DOMContentLoaded', function() {
     let todos = [
         {
-        id: 1,
-        name: "Take out the trash",
-        status: 'Incomplete',
-        category: 'School',
-        dueDate: '2021-09-01',
+            id: 1,
+            name: "Take out the trash",
+            status: 'Incomplete',
+            category: 'School',
+            dueDate: '2021-09-01',
         },
-
         {
-        id: 2,
-        name: "Empty the dishwasher",
-        status: 'Complete',
-        category: 'Home',
-        dueDate: '2021-09-01',
+            id: 2,
+            name: "Empty the dishwasher",
+            status: 'Complete',
+            category: 'Home',
+            dueDate: '2021-09-01',
         },
-
     ];
+
+    const categoryColors = {
+        Work: 'bg-green-200',
+        Home: 'bg-yellow-200',
+        School: 'bg-blue-200',
+        Other: 'bg-gray-200',
+    };
 
     function displayTodos() {
         const todoList = document.getElementById('todoList');
@@ -25,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         todos.forEach(todo => {
             const li = document.createElement('li');
-            li.className = 'mb-4';
+            li.className = `mb-4 p-4 ${categoryColors[todo.category] || 'bg-gray-200'}`; // Apply background color based on category
             if (todo.status === 'Complete') {
                 li.className += ' line-through';
             } else {
@@ -47,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const completeButton = document.createElement('button');
             completeButton.textContent = todo.status === 'Complete' ? 'Incomplete' : 'Complete';
             completeButton.className = 'bg-blue-500 text-white px-2 py-1 rounded ml-2';
-            completeButton.onclick = (event) => {
+            completeButton.onclick = () => {
                 todo.status = todo.status === 'Complete' ? 'Incomplete' : 'Complete';
                 displayTodos();
             };
@@ -56,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const editButton = document.createElement('button');
             editButton.textContent = 'Edit';
             editButton.className = 'bg-yellow-500 text-white px-2 py-1 rounded ml-2';
-            editButton.onclick = (event) => {
+            editButton.onclick = () => {
                 editTodoInline(todo, li);
             };
             li.appendChild(editButton);
@@ -64,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const removeButton = document.createElement('button');
             removeButton.textContent = 'Remove';
             removeButton.className = 'bg-red-500 text-white px-2 py-1 rounded ml-2';
-            removeButton.onclick = (event) => {
+            removeButton.onclick = () => {
                 const index = todos.indexOf(todo);
                 if (index > -1) {
                     todos.splice(index, 1);
@@ -80,13 +85,85 @@ document.addEventListener('DOMContentLoaded', function() {
         incompleteCountElement.textContent = `Incomplete Todos: ${incompleteCount}`;
     }
 
+    const todoCategory = document.getElementById('todoCategory');
+
+    todoCategory.addEventListener('change', function(event) {
+        if (event.target.value === 'addNewCategory') {
+            const newCategory = prompt('Enter new category name:');
+            if (newCategory) {
+                const newColor = prompt('Enter a color for the new category (e.g., bg-red-500):');
+                if (newColor) {
+                    const newOption = document.createElement('option');
+                    newOption.value = newCategory;
+                    newOption.textContent = newCategory;
+                    newOption.className = newColor; // Apply the chosen color
+                    todoCategory.insertBefore(newOption, todoCategory.lastElementChild);
+                    todoCategory.value = newCategory;
+
+                    // Add the new category and color to the categoryColors object
+                    categoryColors[newCategory] = newColor;
+                } else {
+                    alert('No color entered. Category not added.');
+                    todoCategory.value = ''; // Reset to default if no color is entered
+                }
+            } else {
+                todoCategory.value = ''; // Reset to default if no new category is entered
+            }
+        }
+    });
+
     document.getElementById('addTodoForm').addEventListener('submit', function(event) {
         event.preventDefault();
         const name = document.getElementById('todoName').value;
         const category = document.getElementById('todoCategory').value;
         const dueDate = document.getElementById('todoDueDate').value;
+
         const newTodo = addTodo(name, category, dueDate);
-        displayTodos();
+
+        const li = document.createElement('li');
+        li.className = `mb-4 p-4 ${categoryColors[category] || 'bg-gray-200'}`; // Apply background color based on category
+
+        const nameDiv = document.createElement('div');
+        nameDiv.textContent = name;
+        li.appendChild(nameDiv);
+
+        const categoryDiv = document.createElement('div');
+        categoryDiv.textContent = ` - ${category}`;
+        li.appendChild(categoryDiv);
+
+        const dueDateDiv = document.createElement('div');
+        dueDateDiv.textContent = ` - ${dueDate}`;
+        li.appendChild(dueDateDiv);
+
+        const completeButton = document.createElement('button');
+        completeButton.textContent = 'Complete';
+        completeButton.className = 'bg-blue-500 text-white px-2 py-1 rounded ml-2';
+        completeButton.onclick = (event) => {
+            newTodo.status = newTodo.status === 'Complete' ? 'Incomplete' : 'Complete';
+            displayTodos();
+        };
+        li.appendChild(completeButton);
+
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Edit';
+        editButton.className = 'bg-yellow-500 text-white px-2 py-1 rounded ml-2';
+        editButton.onclick = () => editTodoInline(newTodo, li);
+        li.appendChild(editButton);
+
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.className = 'bg-red-500 text-white px-2 py-1 rounded ml-2';
+        removeButton.onclick = (event) => {
+            const index = todos.indexOf(newTodo);
+            if (index > -1) {
+                todos.splice(index, 1);
+            }
+            displayTodos();
+        };
+        li.appendChild(removeButton);
+
+        todoList.appendChild(li);
+        addTodoForm.reset();
     });
 
     function addTodo(name, category, dueDate) {
@@ -99,20 +176,6 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         todos.push(newTodo);
         return newTodo;
-    }
-
-    function completeTodo(id) {
-        const todo = todos.find(todo => todo.id === id);
-        if (todo) {
-            todo.status = 'Complete';
-        }
-    }
-
-    function deleteCategory(category) {
-        const index = categories.indexOf(category);
-        if (index > -1) {
-            categories.splice(index, 1);
-        }
     }
 
     function editTodoInline(todo, li) {
@@ -137,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
         saveButton.textContent = 'Save';
         saveButton.className = 'bg-green-500 text-white px-2 py-1 rounded ml-2';
         saveButton.onclick = (event) => {
-            event.stopPropagation(); 
+            event.stopPropagation();
             todo.name = nameInput.value;
             todo.category = categoryInput.value;
             todo.dueDate = dueDateInput.value;
@@ -149,20 +212,20 @@ document.addEventListener('DOMContentLoaded', function() {
         cancelButton.textContent = 'Cancel';
         cancelButton.className = 'bg-gray-500 text-white px-2 py-1 rounded ml-2';
         cancelButton.onclick = (event) => {
-            event.stopPropagation(); 
+            event.stopPropagation();
             displayTodos();
         };
         li.appendChild(cancelButton);
     }
-    
+
     document.getElementById('clearCompletedButton').addEventListener('click', function() {
         clearCompletedTodos();
     });
 
     function clearCompletedTodos() {
-        console.log('Before clearing:', todos); 
+        console.log('Before clearing:', todos);
         todos = todos.filter(todo => todo.status !== 'Complete');
-        console.log('After clearing:', todos); 
+        console.log('After clearing:', todos);
         displayTodos();
     }
 
